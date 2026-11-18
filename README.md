@@ -1,20 +1,19 @@
 # LowForge (v1.4.0-dev)
 
-Python-оркестратор для автономної та 
-напівавтономної розробки ПЗ через OpenAI-сумісні API з локальним вебінтерфейсом (порт `8876`).
+A Python orchestrator for autonomous and semi-autonomous software development through OpenAI-compatible APIs, with a local web interface (port `8876`).
 
-## Швидкий старт (Windows)
-* Вимоги: Python 3.10+ та ключ OpenAI-сумісного провайдера.
-* Запуск: `START.bat` (локальний дашборд відкриється на `http://127.0.0.1:8876`).
+## Quick Start (Windows)
 
+* Requirements: Python 3.10+ and an OpenAI-compatible provider API key.
+* Start: run `START.bat` (the local dashboard opens at `http://127.0.0.1:8876`).
 
-## Останні результати · 17 листопада 2026
+## Latest Results · November 17, 2026
 
-### Малий проєкт · Orderbook Engine
+### Small Project · Orderbook Engine
 
-Модель GPT‑6 Luna, `reasoning: none`. Усі harness працювали з однаковим початковим кодом і трьома послідовними фазами. LowForge і Codex CLI брали участь у парному прогоні. Aider, Claude Code й OpenCode запускалися окремою серією з тим самим завданням та режимом reasoning.
+GPT-6 Luna, `reasoning: none`. All harnesses used the same initial codebase and completed three sequential phases. LowForge and Codex CLI took part in a paired run. Aider, Claude Code, and OpenCode ran in a separate series with the same task and reasoning mode.
 
-| Harness | Бал | Фази PASS | Час, с | API-запити | Вхідні токени | Вихідні токени |
+| Harness | Score | Phases passed | Time (s) | API requests | Input tokens | Output tokens |
 |---|---:|---:|---:|---:|---:|---:|
 | LowForge-v1.4 | 60/68 | 0/3 | 108.1 | 9 | 48,198 | 4,305 |
 | Aider | 57/68 | 0/3 | 251.0 | 3 | 18,182 | 11,546 |
@@ -22,11 +21,11 @@ Python-оркестратор для автономної та
 | OpenCode | 55/68 | 0/3 | 201.7 | 30 | 275,533 | 6,357 |
 | Codex CLI | 52/68 | 0/3 | 318.2 | 82 | 1,284,946 | 8,382 |
 
-Бал підсумовує перевірки трьох фаз (17 + 24 + 27), зокрема повторні перевірки. Для PASS потрібні всі перевірки фази та успішне завершення harness. У LowForge фінальну фазу перервав `HTTP 400 invalid_prompt`. Scorer оцінив збережений результат цієї фази на 21/27.
+The score sums checks across the three phases (17 + 24 + 27), including repeated checks. A phase passes only when all its checks pass and the harness completes successfully. LowForge's final phase was interrupted by `HTTP 400 invalid_prompt`. The scorer evaluated the saved result for that phase at 21/27.
 
-### Великий проєкт · Enterprise ERP Suite
+### Large Project · Enterprise ERP Suite
 
-GPT‑6 Luna, reasoning `low`. 24 модулі Python, 3 093 рядки, три послідовні фази. Час у таблиці — сума часу роботи harness по фазах.
+GPT-6 Luna, reasoning `low`. A 24-module Python repository with 3,093 lines of code and three sequential phases. The time in the table is the sum of harness execution time across phases.
 
 | Harness | Phases passed | Score | Wall time (s) | Requests | Tool calls | Input tokens | Output tokens | Max input/request | Files modified / 24 |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -34,38 +33,38 @@ GPT‑6 Luna, reasoning `low`. 24 модулі Python, 3 093 рядки, три 
 | Claude Code | 0/3 | 33/60 | 94.2 | 20 | 33 | 178442 | 3381 | 19291 | 4/24 |
 | Aider | 1/3 | 37/60 | 188.2 | 7 | 0 | 143811 | 7238 | 28076 | 2/24 |
 
-Claude Code — версія 2.1.304, Aider — 0.86.2. Рахунок із 60 підсумовує перевірки трьох фаз (10 + 20 + 30), частина перевірок повторюється. PASS фази вимагає повного проходження її перевірок.
+Claude Code version 2.1.304 and Aider version 0.86.2 were used. The score out of 60 sums checks across the three phases (10 + 20 + 30); some checks are repeated. A phase passes only if all its checks pass.
 
-## Як отримано результат
+## How These Results Were Obtained
 
-LowForge використовує Python для оркестрації, локальний вебінтерфейс і OpenAI‑сумісний API для викликів моделі. Під час роботи він збирає контекст із репозиторію в межах бюджету, застосовує правки та запускає перевірки. У бенчмарках незалежний scorer перевіряв результат у Docker із вимкненою мережею. Це дозволило окремо оцінити фактичну поведінку застосунку, навіть коли внутрішня перевірка LowForge обмежилася компіляцією.
+LowForge uses Python for orchestration, a local web interface, and an OpenAI-compatible API for model calls. During a run, it selects repository context within a budget, applies edits, and runs checks. In the benchmarks, an independent scorer evaluated the result in Docker with networking disabled. This made it possible to assess the application's behavior separately, even when LowForge's own verification was limited to compilation.
 
-В ERP LowForge отримав найбільший сумарний бал (40/60) і змінив 7 із 24 файлів. Aider єдиний пройшов цілу фазу (10/10) та використав найменше запитів (7). Claude Code завершив роботу найшвидше за сумою часу фаз (94,2 с). Ці відмінності виміряно в одному прогоні кожного harness. Лічильники інструментів різняться між harness, а кількість змінених файлів показує обсяг правок. Нуль точних збігів повного вмісту файлів у захоплених запитах LowForge сумісний із передаванням уривків.
+In the ERP benchmark, LowForge achieved the highest total score (40/60) and modified 7 of 24 files. Aider was the only harness to pass an entire phase (10/10) and used the fewest requests (7). Claude Code had the shortest total phase time (94.2 s). These differences were measured in one run per harness. Tool-call counters differ between harnesses, and the number of modified files indicates the extent of edits. No exact matches between captured LowForge requests and complete file contents were found; this is consistent with snippets being sent.
 
-Між Orderbook і ERP у **шлюзі бенчмарку** додали один повтор зі скоригованим тілом запиту за `HTTP 400 invalid_prompt`, якщо санітизація змінює тіло. У валідних фазах ERP помилок API не зафіксовано. Внесок окремих механізмів у бал потребував би контрольних повторів.
+Between the Orderbook and ERP runs, one retry with a corrected request body was added to the **benchmark gateway** for `HTTP 400 invalid_prompt` responses when sanitization changes the body. No API errors were recorded in the valid ERP phases. The contribution of individual mechanisms to the scores would require controlled repeat runs.
 
-## Детальний звіт про недавні бенчмарки
+## Detailed Reports on Recent Benchmarks
 
-### Малі проєкти · автономний прогін і відновлення Codex
+### Small Projects · Autonomous Runs and Codex Recovery
 
-Helpdesk і Workshop пройшли базову фазу та оновлення на LowForge. У Stockroom базова фаза пройшла, а оновлення повертало HTTP 400 для архівації активного запису замість очікуваного HTTP 409. Загальний відомий usage LowForge становив 127 827 вхідних і 29 204 вихідних токени.
+Helpdesk and Workshop passed the base phase and upgrade phase with LowForge. In Stockroom, the base phase passed, but the upgrade returned HTTP 400 when archiving an active record instead of the expected HTTP 409. Known aggregate LowForge usage was 127,827 input tokens and 29,204 output tokens.
 
-У Codex CLI початковий прогін і два окремі прогони відновлення дали разом 2/11 успішних спроб фаз, включно з повторами. Базові фази Helpdesk і Stockroom пройшли після відновлення. Серед зафіксованих збоїв були відсутній `app.py`, помилки завершення сесії та невідповідність HTTP-статусу в Workshop. Сукупний usage Codex CLI з повторами становив 1 578 398 вхідних і 49 755 вихідних токенів. В Assisted-запусках три спроби ремонту не дали прийнятих змін ядра, тож Assisted-фази LowForge залишилися без результатів.
+The initial Codex CLI run and two separate recovery runs produced 2 successful phase attempts out of 11, including retries. The Helpdesk and Stockroom base phases passed after recovery. Recorded failures included a missing `app.py`, session-completion errors, and an incorrect HTTP status in Workshop. Aggregate Codex CLI usage, including retries, was 1,578,398 input tokens and 49,755 output tokens. In Assisted runs, three repair attempts yielded no accepted core changes, so the LowForge Assisted phases have no results.
 
-### Orderbook Engine · три фази і два рівні reasoning
+### Orderbook Engine · Three Phases and Two Reasoning Levels
 
-| Reasoning | Harness | Base | Upgrade concurrency | Refactor audit | Загальний score | Wall time (s) | Запити | Input tokens | Output tokens |
+| Reasoning | Harness | Base | Upgrade concurrency | Refactor audit | Total score | Wall time (s) | Requests | Input tokens | Output tokens |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | none | LowForge-v1.4 | FAIL 16/17 | FAIL 23/24 | FAIL 21/27 (harness failed) | 60/68 | 108.1 | 9 | 48198 | 4305 |
 | none | Codex CLI | FAIL 14/17 | FAIL 20/24 | FAIL 18/27 | 52/68 | 318.2 | 82 | 1284946 | 8382 |
 | xhigh | LowForge-v1.4 | PASS 17/17 | PASS 24/24 | PASS 27/27 | 68/68 | 810.4 | 11 | 88419 | 42874 |
 | xhigh | Codex CLI | FAIL 17/17 (harness failed) | PASS 24/24 | FAIL 22/27 | 63/68 | 1957.2 | 120 | 2318828 | 78065 |
 
-У режимі `none` під час фінальної фази LowForge провайдер повернув `HTTP 400 invalid_prompt`. Scorer також зафіксував невиконані перевірки. У режимі `xhigh` LowForge завершив усі три фази та набрав 68/68. Codex CLI отримав 17/17 у базовій фазі, але вичерпав ліміт 60 запитів і завершив фазу зі статусом FAIL. В окремому прогоні `xhigh` Claude Code отримав 68/68, а виконання Aider було перервано під час базової фази до запуску scorer.
+In `none` mode, the provider returned `HTTP 400 invalid_prompt` during LowForge's final phase. The scorer also recorded failed checks. In `xhigh` mode, LowForge completed all three phases and scored 68/68. Codex CLI scored 17/17 in the base phase but exhausted the 60-request limit and ended that phase with FAIL status. In a separate `xhigh` run, Claude Code scored 68/68, while Aider was interrupted during the base phase before the scorer ran.
 
-### Enterprise ERP Suite · результати кожної фази
+### Enterprise ERP Suite · Results by Phase
 
-| Harness | Phase | Score | Status | Wall s | API requests | Tool calls | Input | Output | Max input/request | Modified / 24 |
+| Harness | Phase | Score | Status | Wall time (s) | API requests | Tool calls | Input | Output | Max input/request | Modified / 24 |
 |---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|
 | LowForge-v1.4 | multi_warehouse_allocation | 9/10 | FAIL | 116.9 | 14 | 0 | 159011 | 4775 | 21028 | 4/24 |
 | LowForge-v1.4 | tiered_tax_and_credit_hold | 14/20 | FAIL | 69.4 | 3 | 0 | 36385 | 3329 | 29723 | 6/24 |
@@ -77,9 +76,9 @@ Helpdesk і Workshop пройшли базову фазу та оновленн�
 | Aider | tiered_tax_and_credit_hold | 12/20 | FAIL | 51.6 | 3 | 0 | 68595 | 1439 | 26144 | 0/24 |
 | Aider | credit_note_reversal_and_audit | 15/30 | FAIL | 32.8 | 2 | 0 | 51105 | 1013 | 28076 | 0/24 |
 
-- **Розподіл запасів між складами.** LowForge отримав 9/10. Не пройшла перевірка, яка вимагає показувати доступний і зарезервований залишок через API.
-- **Податки й кредитні ліміти.** LowForge отримав 14/20. Провали охопили врахування неоплачених рахунків і зарезервованих замовлень, побічні ефекти кредитного блокування та атомарність зняття блокування.
-- **Повернення й аудит.** LowForge отримав 17/30 і завершив роботу зі статусом failed без нових змін у файлах цієї фази. Серед невиконаних перевірок були повернення товару до вихідної партії, пропорційні податки, компенсувальні проводки, ідемпотентність і перевірка хеш-ланцюга аудиту.
-- **Відновлення прогону.** Фази 2–3 LowForge продовжили зі збереженого знімка після колізії runner у фазі 1. Три початкові спроби Aider без доступу до файлів завдання виключено з оцінки. Усі дев’ять валідних фаз оцінив незалежний Docker scorer.
+- **Multi-warehouse allocation.** LowForge scored 9/10. The failed check required the API to expose both available and reserved stock.
+- **Taxes and credit limits.** LowForge scored 14/20. Failures covered accounting for unpaid invoices and reserved orders, side effects of placing a credit hold, and atomicity when releasing a hold.
+- **Refunds and audit.** LowForge scored 17/30 and ended with failed status without making new changes to files in this phase. Failed checks included restocking the original batch, proportional tax adjustments, compensating ledger entries, idempotency, and audit hash-chain verification.
+- **Run recovery.** LowForge phases 2–3 resumed from a saved snapshot after a runner collision in phase 1. Aider's three initial attempts without access to the task files were excluded from scoring. An independent Docker scorer evaluated all nine valid phases.
 
-Налаштування ERP: контекст 128 000 токенів, до 16 384 вихідних токенів, до 60 запитів на фазу, тайм-аути 1 500 с на фазу й 180 с на HTTP-запит. Бенчмарк витратив 2 160 із 90 000 одиниць верхньої межі cap.
+ERP benchmark settings: 128,000-token context, up to 16,384 output tokens, up to 60 requests per phase, 1,500-second phase timeouts, and 180-second HTTP timeouts. The benchmark used 2,160 of the 90,000-unit upper cap.
