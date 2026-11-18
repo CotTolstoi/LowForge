@@ -1,9 +1,12 @@
-# LowForge 1.4.0-dev
+# LowForge (v1.4.0-dev)
 
-Based on Git commit `c9d5e8ddb4f438e0eb027891a49e1bd7291b8937` plus uncommitted working-tree changes present when this archive was built.
-Development build. See the benchmark notes below for the scope of the published results.
-Requires Python 3.10+ and an externally configured OpenAI-compatible provider. The package contains application files, launch instructions, and a benchmark summary.
-Run `START.bat` on Windows. The dashboard uses loopback port 8876.
+Python-оркестратор для автономної та 
+напівавтономної розробки ПЗ через OpenAI-сумісні API з локальним вебінтерфейсом (порт `8876`).
+
+## Швидкий старт (Windows)
+* Вимоги: Python 3.10+ та ключ OpenAI-сумісного провайдера.
+* Запуск: `START.bat` (локальний дашборд відкриється на `http://127.0.0.1:8876`).
+
 
 ## Останні результати · 17 листопада 2026
 
@@ -80,5 +83,3 @@ Helpdesk і Workshop пройшли базову фазу та оновленн�
 - **Відновлення прогону.** Фази 2–3 LowForge продовжили зі збереженого знімка після колізії runner у фазі 1. Три початкові спроби Aider без доступу до файлів завдання виключено з оцінки. Усі дев’ять валідних фаз оцінив незалежний Docker scorer.
 
 Налаштування ERP: контекст 128 000 токенів, до 16 384 вихідних токенів, до 60 запитів на фазу, тайм-аути 1 500 с на фазу й 180 с на HTTP-запит. Бенчмарк витратив 2 160 із 90 000 одиниць верхньої межі cap.
-
-Джерела в репозиторії: `benchmarkresult.md` (Luna/Codex), `benchmark_reasoning_none_xhigh.md` (Orderbook) і `benchmark_large_scale.md` (ERP, прогін `20261117-180458-066155`). Артефакти ERP містять контрольні суми окремих файлів LowForge. Повна побайтова відповідність усіх файлів збірки історичному прогону не підтверджена.
